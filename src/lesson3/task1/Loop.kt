@@ -2,6 +2,7 @@
 package lesson3.task1
 
 import java.lang.Math.min
+import java.lang.Math.pow
 
 /**
  * Пример
@@ -162,7 +163,15 @@ fun cos(x: Double, eps: Double): Double = TODO()
  * Поменять порядок цифр заданного числа n на обратный: 13478 -> 87431.
  * Не использовать строки при решении задачи.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var number = n
+    var a = 0
+    while (number > 0) {
+        a = a*10 + number % 10
+        number /= 10
+    }
+    return a
+}
 
 /**
  * Средняя
