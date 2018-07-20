@@ -36,7 +36,7 @@ fun timeSecondsToStr(seconds: Int): String {
  * Пример: консольный ввод
  */
 fun main(args: Array<String>) {
-    println("Введите время в формате ЧЧ:ММ:СС")
+    /*println("Введите время в формате ЧЧ:ММ:СС")
     val line = readLine()
     if (line != null) {
         val seconds = timeStrToSeconds(line)
@@ -49,7 +49,8 @@ fun main(args: Array<String>) {
     }
     else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
-    }
+    }*/
+    println(flattenPhoneNumber("+791585325"))
 }
 
 /**
@@ -60,7 +61,38 @@ fun main(args: Array<String>) {
  * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val parts = str.split(" ")
+    var datetext : Array<Int> = (arrayOf(0, 0, 0))
+    var i = 0
+    try {
+        for (part in parts) {
+            datetext[i] = when (part) {
+                "января" -> 1
+                "февраля" -> 2
+                "марта" -> 3
+                "апреля" -> 4
+                "мая" -> 5
+                "июня" -> 6
+                "июля" -> 7
+                "августа" -> 8
+                "сентября" -> 9
+                "октября" -> 10
+                "ноября" -> 11
+                "декабря" -> 12
+                else -> part.toInt()
+            }
+            i++
+        }
+    }
+    catch (e: NumberFormatException) {
+        return ""
+    }
+    for (i in 0..2) {
+        if (datetext[i] == 0) return ""
+    }
+    return String.format("%02d.%02d.%4d", datetext[0], datetext[1], datetext[2])
+}
 
 /**
  * Средняя
@@ -69,7 +101,44 @@ fun dateStrToDigit(str: String): String = TODO()
  * Перевести её в строковый формат вида "15 июля 2016".
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val parts = digital.split(".")
+    var i = 0
+    var day = ""
+    var month = ""
+    var year = ""
+    try {
+        for (part in parts) {
+            if (i == 0) {
+                var n = part.toInt()
+                day = "$n"
+            } else if (i == 1) {
+                month = when (part) {
+                    "01" -> "января"
+                    "02" -> "февраля"
+                    "03" -> "марта"
+                    "04" -> "апреля"
+                    "05" -> "мая"
+                    "06" -> "июня"
+                    "07" -> "июля"
+                    "08" -> "августа"
+                    "09" -> "сентября"
+                    "10" -> "октября"
+                    "11" -> "ноября"
+                    "12" -> "декабря"
+                    else -> return ""
+                }
+            } else if (i == 2) {
+                year = part
+            } else return ""
+            i++
+        }
+    }
+    catch (e: NumberFormatException) {
+        return ""
+    }
+    return String.format("%s %s %s", day, month, year)
+}
 
 /**
  * Сложная
@@ -83,7 +152,22 @@ fun dateDigitToStr(digital: String): String = TODO()
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val parts = phone.split("")
+    var result = ""
+    try {
+        for (part in parts) {
+                if (part.isNullOrEmpty()) continue else if (part == "+") result += part
+                else if (part == "0" || part == "1" || part == "2" || part == "3" || part == "4" ||
+                        part == "5" || part == "6" || part == "7" || part == "8" || part == "9") result += part
+                else if (part == "-" || part == "(" || part == ")" || part == " ") continue else return ""
+        }
+        return result
+    }
+    catch (e: NumberFormatException) {
+        return ""
+    }
+}
 
 /**
  * Средняя
@@ -95,7 +179,20 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val parts = jumps.split(" ")
+    var maxjump = 0
+    try {
+        for (part in parts) {
+            if (part == "-" || part == "%") continue else
+                if (part.toInt() > maxjump) maxjump = part.toInt()
+        }
+        if (maxjump == 0) return -1 else return maxjump
+    }
+    catch (e: NumberFormatException) {
+        return -1
+    }
+}
 
 /**
  * Сложная
@@ -107,7 +204,22 @@ fun bestLongJump(jumps: String): Int = TODO()
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val parts = jumps.split(" ")
+    var maxjump1 = 0
+    var maxjump2 = 0
+    try {
+        for ((index, element) in parts.withIndex()) {
+            if (!(element.contains('%') || element.contains('+') || element.contains('-'))) maxjump1 = element.toInt()
+            if ((element.contains('+')) && (maxjump1 > maxjump2)) maxjump2 = maxjump1 else
+                if (element.contains('%') || element.contains('-')) maxjump1 = -1
+        }
+        if (maxjump2 == 0) return -1 else return maxjump2
+    }
+    catch (e: NumberFormatException) {
+        return -1
+    }
+}
 
 /**
  * Сложная
@@ -118,7 +230,25 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val parts = expression.split(" ")
+    var result = 0
+    var charchain = 0
+    var charsign = 0 // 0 - плюс, 1 - минус
+    for (part in parts) {
+        if (!(part.contains('+') || part.contains('-')) && charchain == 0) {
+            if (charsign == 0) result += part.toInt() else result -= part.toInt()
+            charchain = 1
+        } else if (part == "+" && charchain == 1) {
+                charsign = 0
+                charchain = 0
+            } else if (part == "-" && charchain == 1) {
+                    charsign = 1
+                    charchain = 0
+                } else throw IllegalArgumentException("Неправильный формат выражения")
+    }
+    return result
+}
 
 /**
  * Сложная

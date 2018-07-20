@@ -2,7 +2,13 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import java.io.File.separator
+import java.lang.Math.*
 
+fun main(args: Array<String>) {
+    var a = russian(125362)
+    println(a)
+}
 /**
  * Пример
  *
@@ -104,14 +110,20 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = TODO()
+fun abs(v: List<Double>): Double {
+    var a = 0.0
+    if (listOf(v).isEmpty()) return 0.0 else {
+        for (element in v) a += element * element
+    }
+    return (sqrt(a))
+}
 
 /**
  * Простая
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double = if (list.isEmpty()) 0.0 else list.sum()/list.size
 
 /**
  * Средняя
@@ -119,7 +131,11 @@ fun mean(list: List<Double>): Double = TODO()
  * Центрировать заданный список list, уменьшив каждый элемент на среднее арифметическое всех элементов.
  * Если список пуст, не делать ничего. Вернуть изменённый список.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = TODO()
+fun center(list: MutableList<Double>): MutableList<Double> {
+    val a = mean(list)
+    for ((index, element) in list.withIndex()) list[index] = element - a
+    return list
+}
 
 /**
  * Средняя
@@ -128,7 +144,11 @@ fun center(list: MutableList<Double>): MutableList<Double> = TODO()
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.0.
  */
-fun times(a: List<Double>, b: List<Double>): Double = TODO()
+fun times(a: List<Double>, b: List<Double>): Double {
+    var c = 0.0
+    if (a.isEmpty() && b.isEmpty()) return 0.0 else for ((index, element) in a.withIndex()) c += a[index] * b[index]
+    return c
+}
 
 /**
  * Средняя
@@ -138,7 +158,11 @@ fun times(a: List<Double>, b: List<Double>): Double = TODO()
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0.0 при любом x.
  */
-fun polynom(p: List<Double>, x: Double): Double = TODO()
+fun polynom(p: List<Double>, x: Double): Double {
+    var c = 0.0
+    if (p.isEmpty()) return c else for ((index, element) in p.withIndex()) c += element * pow(x,index.toDouble())
+    return c
+}
 
 /**
  * Средняя
@@ -148,7 +172,15 @@ fun polynom(p: List<Double>, x: Double): Double = TODO()
  * Например: 1, 2, 3, 4 -> 1, 3, 6, 10.
  * Пустой список не следует изменять. Вернуть изменённый список.
  */
-fun accumulate(list: MutableList<Double>): MutableList<Double> = TODO()
+fun accumulate(list: MutableList<Double>): MutableList<Double> {
+    var a = 0.0
+    if (list.isEmpty()) return list else
+        for ((index, element) in list.withIndex()) {
+        a += element
+        list[index] = a
+    }
+    return list
+}
 
 /**
  * Средняя
@@ -157,7 +189,19 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> = TODO()
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-fun factorize(n: Int): List<Int> = TODO()
+fun factorize(n: Int): List<Int> {
+    var a = n
+    var list = mutableListOf<Int>()
+    var i = 2
+    do {
+        if (a % i == 0) {
+            list.add(i)
+            a /= i
+            i = 2
+        } else i++
+    } while (i <= a)
+    return list
+}
 
 /**
  * Сложная
@@ -165,7 +209,10 @@ fun factorize(n: Int): List<Int> = TODO()
  * Разложить заданное натуральное число n > 1 на простые множители.
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
-fun factorizeToString(n: Int): String = TODO()
+fun factorizeToString(n: Int): String {
+    var a = factorize(n)
+    return a.joinToString(separator = "*")
+}
 
 /**
  * Средняя
@@ -223,4 +270,32 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    var a = n
+    var list = String()
+    var i = 100000
+    do {
+        var list1 = when (a / i) {
+            1 -> "один"
+            2 -> "два"
+            3 -> "три"
+            4 -> "четыре"
+            5 -> "пять"
+            6 -> "шесть"
+            7 -> "семь"
+            8 -> "восемь"
+            9 -> "девять"
+            else -> ""
+        }
+        if ((i == 100000) && list1.isNotEmpty()) (list1 + "сот ") else
+            if ((i == 10000) && list1.isNotEmpty()) (list1 + "десят ") else
+                if ((i == 1000) && list1.isNotEmpty()) (list1 + "тысяч ") else
+                    if ((i == 100) && list1.isNotEmpty()) (list1 + "сот ") else
+                        if ((i == 10) && list1.isNotEmpty()) (list1 + "десят ") else
+                            if ((i == 1) && list1.isNotEmpty()) (list1 + " ") else
+        a = a - (a / i) * i
+        i /= 10
+        list += list1
+    } while (i < 1)
+    return list
+}
