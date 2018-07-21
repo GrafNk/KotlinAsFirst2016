@@ -8,13 +8,18 @@ package lesson5.task1
  * Разобрать эту строку и рассчитать количество секунд, прошедшее с начала дня.
  */
 fun timeStrToSeconds(str: String): Int {
-    val parts = str.split(":")
+    /*val parts = str.split(":")
     var result = 0
     for (part in parts) {
         val number = part.toInt()
         result = result * 60 + number
     }
-    return result
+    return result*/
+    val matchResult = Regex("""(\d\d):(\d\d):(\d\d)""").find(str)
+    if (matchResult == null) return -1
+    return matchResult.groupValues.drop(1).map { it.toInt() }.fold(0) {
+        previous, next -> previous * 60 + next
+    }
 }
 
 fun twoDigitStr(n: Int) = if (n in 0..9) "0$n" else "$n"
@@ -50,7 +55,7 @@ fun main(args: Array<String>) {
     else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
     }*/
-    println(flattenPhoneNumber("+791585325"))
+    println(timeStrToSeconds("11:05:22"))
 }
 
 /**
