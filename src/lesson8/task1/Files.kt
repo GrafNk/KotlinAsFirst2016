@@ -3,6 +3,7 @@ package lesson8.task1
 
 import java.io.File
 
+
 /**
  * Пример
  *
@@ -54,7 +55,20 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  *
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
-    TODO()
+    var map = mapOf<String, Int>()
+    var i = 0
+    File(inputName).bufferedReader().use {
+        for (element in substrings) {
+            for (line in File(inputName).readLines()) {
+                if (line.toLowerCase().contains(element.toLowerCase())) {
+                    i += line.toLowerCase().split(element.toLowerCase()).count() - 1
+                } else continue
+            }
+            map += (Pair(element, i))
+            i = 0
+        }
+    }
+    return map
 }
 
 
@@ -72,7 +86,42 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+//    val repla = {a : String, b : String, c : String -> a.replace(b, c, ignoreCase = false)}
+    File(inputName).bufferedReader().use {
+        for (line in File(inputName).readLines()) {
+            if (line.isEmpty()) {
+                outputStream.newLine()
+                continue
+            }
+            if (!(line.toLowerCase().contains(Regex("""жы|жя|жю|шы|шя|шю|чы|чя|чю|щы|щя|щю"""))))
+                outputStream.write(line) else {
+                var bufferline = ""
+                for ((index,word) in line.withIndex()) {
+                    if ((index <= line.length - 1)) {
+                        if (index == 0) {
+                            bufferline += word
+                            continue
+                        }
+                        var slovo = "" + line[index - 1].toLowerCase() + word.toLowerCase()
+                        if (slovo.contains(Regex("""жы|жя|жю|шы|шя|шю|чы|чя|чю|щы|щя|щю""")))
+                            when (word) {
+                                'ы' -> bufferline += 'и'
+                                'Ы' -> bufferline += 'И'
+                                'я' -> bufferline += 'а'
+                                'Я' -> bufferline += 'А'
+                                'ю' -> bufferline += 'у'
+                                'Ю' -> bufferline += 'У'
+                                else -> bufferline += word
+                            } else bufferline += word
+                    } else break
+                }
+            outputStream.write(bufferline)
+            }
+        outputStream.newLine()
+        }
+    }
+    outputStream.close()
 }
 
 /**
@@ -93,7 +142,24 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    var maxlenght = 0
+    File(inputName).bufferedReader().use {
+        for (line in File(inputName).readLines()) {
+            if (line.length >= maxlenght) maxlenght = line.length
+        }
+        for (line in File(inputName).readLines()) {
+            if (line.replace(Regex("\\s{2,100}"),"").length < maxlenght) {
+                var spacesize = (maxlenght - line.replace(Regex("\\s{2,100}"),"").length) / 2
+                for (i in 1..spacesize) {
+                    outputStream.write(" ")
+                }
+                outputStream.write(line.replace(Regex("\\s{2,100}"),""))
+            } else outputStream.write(line)
+            outputStream.newLine()
+        }
+        outputStream.close()
+    }
 }
 
 /**
